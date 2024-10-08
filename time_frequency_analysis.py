@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.signal import welch
-
+import scipy.signal as signal
+from scipy.linalg import svd
 def compute_rms(emg_signal):
     """计算均方根值（RMS）"""
     return np.sqrt(np.mean(emg_signal**2))
@@ -42,3 +43,20 @@ def Compute_Psd_Value(filtered_emg_data,sampling_rate):
         freqs, psd = compute_psd(filtered_emg_data[i, :], sampling_rate)
         psd_values.append((freqs, psd))
     return psd_values
+def zero_crossing(filtered_emg_data):
+    """零交叉率（Zero Crossing, ZC）"""
+    zc_count = np.sum(np.diff(np.sign(filtered_emg_data)) != 0)
+    return zc_count
+def slope_sign_changes(filtered_emg_data, threshold=0.01):
+    """斜率符号变化（Slope Sign Change, SSC）"""
+    ssc_count = np.sum(((filtered_emg_data[1:-1] - filtered_emg_data[:-2]) * (filtered_emg_data[2:] - filtered_emg_data[1:-1])) > threshold)
+    return ssc_count
+def mean_frequency(filtered_emg_data, fs):
+    """均值频率（Mean Frequency, MNF）  fs为采样频率"""
+    f, Pxx = signal.welch(filtered_emg_data, fs, nperseg=1024)
+    mnf = np.sum(f * Pxx) / np.sum(Pxx)
+    return mnf
+def singular_value_decomposition(filtered_emg_data):
+    """奇异值分解（Singular Value Decomposition, SVD）"""
+    u, s, vh = svd(filtered_emg_data.reshape(-1, 1), full_matrices=False)
+    return s[0]
