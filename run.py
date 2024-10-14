@@ -10,13 +10,10 @@ filtered_data = Butter_Bandpass_Preprocessing(dc_removed_data)
 rectified_data = full_wave_rectification(filtered_data)
 envelope_data = rms_envelope(rectified_data)
 normalized_data = mvc_normalization(envelope_data)
-
 rms_values,mav_values = Compute_RMS_MAV_Value(filtered_data)
 psd_values = Compute_Psd_Value(filtered_data,1000)
-
 Plot_RMS_MAV_Graph(rms_values,mav_values)
 Plot_PSD_Graph(psd_values)
-
 # 每个步态周期的开始时间
 gait_event_indices = [1000, 3000, 5000, 7000, 9000]
 #每个步态周期
@@ -29,5 +26,5 @@ left_indices,right_indices,left_rms_values,right_rms_values,left_mav_values,righ
 Plot_Left_Right_Muscle_Comparison(left_indices,right_indices,left_rms_values,right_rms_values,left_mav_values,right_mav_values)
 contribution_rate = Muscle_Contribution_Rate(normalized_data)
 Plot_Muscle_Contribution_Rate(contribution_rate)
-CCI_values = Muscle_CCI(normalized_data)
+CCI_values = Left_Right_Muscle_CCI(normalized_data)
 Plot_CCI_Values(CCI_values)

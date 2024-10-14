@@ -41,7 +41,7 @@ def Plot_PSD_Per_Cycle_Graph(cycle_psds):
     plt.grid()
     plt.savefig("./output_img/PSD_Per_Cycle_Graph.png")
     plt.show()
-def Plot_NMF_Graph(W,H,n_components):
+def Plot_NMF_Graph(W,H,n_components,channel_names,file_name):
     # 统一字体和样式设置
     plt.rcParams.update({
         'font.size': 30,  # 全局字体大小
@@ -62,7 +62,7 @@ def Plot_NMF_Graph(W,H,n_components):
         # 偏移每个协同模式的条形图，使其并排排列
         plt.bar(index + i * bar_width, H[i, :], bar_width, alpha=0.6, label=f'协同模式 {i + 1}')
 
-    plt.title(f'各协同模式的肌肉贡献')
+    plt.title(f'文件{file_name} 各协同模式的肌肉贡献')
     plt.xlabel('肌肉通道')
     plt.ylabel('权重')
     plt.xticks(index + bar_width * (n_components - 1) / 2, channel_names, rotation=45)  # 调整x轴刻度位置
@@ -70,7 +70,7 @@ def Plot_NMF_Graph(W,H,n_components):
     plt.grid()
 
     plt.tight_layout()  # 调整布局防止标签重叠
-    plt.savefig("./output_img/NMF_Bar.png")
+    plt.savefig(f"./output_img/NMF_Bar_{file_name}.png")
     plt.show()
 
     # 可视化协同激活时间曲线 W
@@ -78,14 +78,14 @@ def Plot_NMF_Graph(W,H,n_components):
     for i in range(n_components):
         plt.plot(W[0:1000, i], label=f'协同模式 {i + 1}')
 
-    plt.title('协同模式的激活时间曲线')
+    plt.title(f'文件{file_name} 协同模式的激活时间曲线')
     plt.xlabel('时间 (样本点)')
     plt.ylabel('激活值')
     plt.legend()
     plt.grid()
 
     plt.tight_layout()  # 调整布局
-    plt.savefig("./output_img/NMF_Line.png")
+    plt.savefig(f"./output_img/NMF_Line_{file_name}.png")
     plt.show()
 def Plot_Left_Right_Muscle_Comparison(left_indices,right_indices,left_rms_values,right_rms_values,left_mav_values,right_mav_values):
     channels = ['股直肌', '股二头肌', '胫前肌', '腓肠肌']
@@ -145,4 +145,15 @@ def Plot_CCI_Values(cci_values):
     # plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig("./output_img/CCI_Values.png")
+    plt.show()
+def Plot_Gait_Per_Cycle(single_gait_data,channel_names):
+    fig, axes = plt.subplots(len(channel_names), 1, figsize=(12, 15), sharex=True)
+    fig.suptitle(f"步态周期:id:{single_gait_data['id']} \n emg帧:{int(single_gait_data['begin'])} - {int(single_gait_data['end'])}", fontsize=25)
+    for i in range(len(channel_names)):
+        axes[i].plot(single_gait_data["data"][i], label=channel_names[i], color='b', linewidth=1.5)
+        axes[i].grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)  # 添加网格
+        axes[i].legend(loc='upper right')  # 添加图例
+        axes[-1].set_xticklabels([f'{int(x)}' for x in np.linspace(int(single_gait_data['begin']), int(single_gait_data['end']), len(axes[-1].get_xticks()))])
+    plt.subplots_adjust(hspace=0.4)
+    plt.savefig(f"./output_img/Gait_Per_Cycle_id_{single_gait_data['id']}.png")
     plt.show()

@@ -1,5 +1,5 @@
-from scipy.signal import butter, filtfilt
 import numpy as np
+from scipy.signal import butter, filtfilt
 #信号预处理：巴特沃斯滤波
 def Butter_Bandpass(lowcut, highcut, fs, order=5):
     nyq = 0.5 * fs
@@ -7,11 +7,28 @@ def Butter_Bandpass(lowcut, highcut, fs, order=5):
     high = highcut / nyq
     b, a = butter(order, [low, high], btype='band')
     return b, a
-def Butter_Bandpass_Preprocessing(emg_data):
-    sampling_rate = 1000 #采样率
+#低通滤波器
+def low_pass_filter(data, cutoff, sampling_rate, order=4):
+    nyquist = 0.5 * sampling_rate  # 奈奎斯特频率
+    normal_cutoff = cutoff / nyquist  # 归一化截止频率
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)  # 设计低通滤波器
+    filtered_data = filtfilt(b, a, data)  # 应用滤波器
+    return filtered_data
+#高通滤波器
+def high_pass_filter(data, cutoff, sampling_rate, order=4):
+    nyquist = 0.5 * sampling_rate  # 奈奎斯特频率
+    normal_cutoff = cutoff / nyquist  # 归一化截止频率
+    b, a = butter(order, normal_cutoff, btype='high', analog=False)  # 设计高通滤波器
+    filtered_data = filtfilt(b, a, data)  # 应用滤波器
+    return filtered_data
+#移动平均滤波器 - 移动平滑平滑
+def smooth_signal(signal, window_size=5):
+    return np.convolve(signal, np.ones(window_size)/window_size, mode='same')
+def Butter_Bandpass_Preprocessing(emg_data,sampling_rate,lowcut = 20.0,highcut = 450.0):
+    # sampling_rate = 1000 #采样率
     # 滤波参数
-    lowcut = 20.0
-    highcut = 450.0
+    # lowcut = 20.0
+    # highcut = 450.0
     b, a = Butter_Bandpass(lowcut, highcut, sampling_rate)
     #行数 = 通道数 ， 列数 = 样本数
     n_channels = emg_data.shape[0]
