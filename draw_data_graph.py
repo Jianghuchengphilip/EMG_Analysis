@@ -148,12 +148,12 @@ def Plot_CCI_Values(cci_values):
     plt.show()
 def Plot_Gait_Per_Cycle(single_gait_data,channel_names):
     fig, axes = plt.subplots(len(channel_names), 1, figsize=(12, 15), sharex=True)
-    fig.suptitle(f"步态周期:id:{single_gait_data['id']} \n emg帧:{int(single_gait_data['begin'])} - {int(single_gait_data['end'])}", fontsize=25)
+    fig.suptitle(f"步态周期:id:{single_gait_data['id']} \n emg帧:{int(single_gait_data['begin'])* 10} - {int(single_gait_data['end'])* 10}", fontsize=25)
     for i in range(len(channel_names)):
         axes[i].plot(single_gait_data["data"][i], label=channel_names[i], color='b', linewidth=1.5)
         axes[i].grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)  # 添加网格
         axes[i].legend(loc='upper right')  # 添加图例
-        axes[-1].set_xticklabels([f'{int(x)}' for x in np.linspace(int(single_gait_data['begin']), int(single_gait_data['end']), len(axes[-1].get_xticks()))])
+        axes[-1].set_xticklabels([f'{int(x)}' for x in np.linspace(int(single_gait_data['begin']) * 10, int(single_gait_data['end']) * 10, len(axes[-1].get_xticks()))])
     plt.subplots_adjust(hspace=0.4)
     plt.savefig(f"./output_img/Gait_Per_Cycle_id_{single_gait_data['id']}.png")
     plt.show()

@@ -30,6 +30,7 @@ Fz_data,Fz_sampling_rate = Get_Force_Plate_Data(data=analogs,parameters=paramete
 heel_strikes, toe_offs = Get_Gait_Events(Fz_data,Fz_sampling_rate)
 #emg
 emg_data,channel_names = Read_M_File(m_path)
+print(emg_data.shape)
 del channel_names[-1]
 emg_data = np.delete(emg_data,-1,axis=0)
 dc_removed_data = remove_dc_offset(emg_data)
@@ -38,6 +39,7 @@ filtered_data = Butter_Bandpass_Preprocessing(dc_removed_data,sampling_rate=emg_
 rectified_data = full_wave_rectification(filtered_data)
 envelope_data = rms_envelope(rectified_data)
 normalized_data = mvc_normalization(envelope_data)
+print(normalized_data.shape)
 # seg
 gait_sets = Gait_Cycle_Segmentation(normalized_data,emg_sampling_rate,Fz_sampling_rate,heel_strikes, toe_offs)
 # print(gait_sets)
@@ -46,5 +48,9 @@ gait_sets = Gait_Cycle_Segmentation(normalized_data,emg_sampling_rate,Fz_samplin
 # plt.plot(gait_sets[9]["data"][2].T)
 # plt.show()
 # print(channel_names)
-for i in range(1,20):
+for i in range(1,10):
     Plot_Gait_Per_Cycle(gait_sets[i],channel_names)
+    # print(channel_names)
+    # for j in range(0,len(channel_names)):
+    #     print(compute_rms(gait_sets[i]['data'][j]),channel_names[j])
+    # print("----------------------------------------------------------")

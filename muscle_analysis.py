@@ -1,5 +1,6 @@
 from sklearn.decomposition import NMF
 from time_frequency_analysis import *
+import spm1d
 #分割步态周期
 def Gait_Cycle_Segmentation(filtered_emg_data,emg_fs,force_plate_fs,heel_strikes, toe_offs):
     gait_set ={'id': 0,'begin': 0,'end': 0,'data':None}
@@ -55,3 +56,22 @@ def Left_Right_Muscle_CCI(filtered_emg_data,left_indices = [5, 6, 2, 4],right_in
         cci = compute_cci(filtered_emg_data[left_index, :], filtered_emg_data[right_index, :])
         cci_values.append(cci)
     return cci_values
+#SPM分析
+def SPM(group1,group2=[]): #SPM定制化较强，故内部参数后续自设
+    one_sample_t_test = None
+    one_way_ANOVA = None
+    two_sample_t_test = None
+    paired_t_test = None
+    if len(group2) == 0: #Group2为空则只有一组数据
+        one_sample_t_test = spm1d.stats.ttest1(group1).inference()   #单样本 t 检验 (One-sample t-test): 用于检测数据是否与某个已知值（通常为零）存在显著差异。
+        one_way_ANOVA = spm1d.stats.anova1(group1).inference()
+    else:
+        two_sample_t_test = spm1d.stats.ttest2(group1, group2).inference(alpha=0.05, two_tailed=True) #双样本 t 检验 (Two-sample t-test): 用于比较两个独立组之间的差异。
+        paired_t_test = spm1d.stats.ttest_paired(group1, group2).inference(two_tailed=True) #配对 t 检验 (Paired t-test): 用于比较配对样本（例如同一组个体在不同条件下的表现）的差异。
+    result = {'one_sample_t_test':one_sample_t_test,'one_way_ANOVA':one_way_ANOVA,'two_sample_t_test':two_sample_t_test,'paired_t_test':paired_t_test}
+    return result
+
+
+
+
+

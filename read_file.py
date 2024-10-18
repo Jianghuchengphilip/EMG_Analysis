@@ -17,7 +17,7 @@ def Read_Asc_File(file_path):
             except ValueError:
                 # 处理无法转换为浮点数的行  跳过中文
                 continue
-    return np.array(data)
+    return np.array(data).T
 def Read_M_File(file_path):
     mat_data = scipy.io.loadmat(file_path)
     main_data = mat_data[list(mat_data.keys())[-1]]

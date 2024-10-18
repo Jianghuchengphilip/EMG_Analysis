@@ -55,3 +55,14 @@ def rms_envelope(data, window_size=100):
 def mvc_normalization(data):
     max_values = np.max(data, axis=1, keepdims=True)
     return (data / max_values) * 100
+#将一个Group组sEMG信号对齐
+def semg_signal_alignment(group_data,n_channels,n_timepoints=100): #SPM分析的数据预处理  group数据包含一组list，每个步态周期的数据都放在一个list中//n_channels为通道数//目标时间点数（0-100% 步态周期）
+    aligned_data = np.zeros((len(group_data), n_timepoints, n_channels))
+    for i, cycle in enumerate(group_data):
+        n_samples = cycle.shape[1]
+        original_time = np.linspace(0, 1, n_samples)
+        target_time = np.linspace(0, 1, n_timepoints)
+        # 对每个通道插值
+        for j in range(n_channels):
+            aligned_data[i, :, j] = np.interp(target_time, original_time, cycle[j, :])
+    return aligned_data
