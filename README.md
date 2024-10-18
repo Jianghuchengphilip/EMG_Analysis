@@ -67,3 +67,8 @@ Ground Walking）
 ![肌肉贡献率图](https://github.com/Jianghuchengphilip/EMG_Analysis/blob/main/output_img/Muscle_Contribution_Rate.png "肌肉贡献率图")
 - CCI值图
 ![CCI值图](https://github.com/Jianghuchengphilip/EMG_Analysis/blob/main/output_img/CCI_Values.png "CCI值图")
+- 步态分割示意图
+![步态分割示意图](https://github.com/Jianghuchengphilip/EMG_Analysis/blob/main/output_img/Gait_Per_Cycle_id_2.png "步态分割示意图")
+- SPM分析示例图
+![SPM分析示例图](https://github.com/Jianghuchengphilip/EMG_Analysis/blob/main/output_img/LR%20%26%20DR%20SPM%20sEMGUltium%20EMG-%E8%82%A1%E5%86%85%20%E5%B7%A6.png "SPM分析示例图")
+
