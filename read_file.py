@@ -15,9 +15,9 @@ def Read_Asc_File(file_path):
                 # 提取所需的信号值并添加到数据列表中
                 data.append([float(value) for value in values])
             except ValueError:
-                # 处理无法转换为浮点数的行  跳过中文
+                channels_name = values # 通道名称
                 continue
-    return np.array(data).T
+    return np.array(data).T,channels_name
 def Read_M_File(file_path):
     mat_data = scipy.io.loadmat(file_path)
     main_data = mat_data[list(mat_data.keys())[-1]]

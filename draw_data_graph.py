@@ -1,13 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
-channel_names = ['右股直肌','右股二头肌','左胫前肌','右胫前肌','左腓肠肌','左股直肌','左股二头肌','右腓肠肌']  # 通道名称
 #解决中文乱码问题
 plt.rcParams["font.sans-serif"] = ["SimHei"]
 plt.rcParams['axes.unicode_minus'] = False
-def Plot_RMS_MAV_Graph(rms_values,mav_values):
+def Plot_RMS_MAV_Graph(rms_values,mav_values,channels_name):
     plt.figure(figsize=(12, 8))
-    plt.bar(channel_names, rms_values, color='b', alpha=0.6, label='RMS')
-    plt.bar(channel_names, mav_values, color='r', alpha=0.6, label='MAV')
+    plt.bar(channels_name, rms_values, color='b', alpha=0.6, label='RMS')
+    plt.bar(channels_name, mav_values, color='r', alpha=0.6, label='MAV')
     plt.title("RMS 和 MAV 的对比", fontsize=20)
     plt.xlabel("肌肉通道", fontsize=15)
     plt.ylabel("信号幅值", fontsize=15)
@@ -17,9 +16,9 @@ def Plot_RMS_MAV_Graph(rms_values,mav_values):
     plt.savefig("./output_img/RMS_MAV_Graph.png")
     plt.show()
 
-def Plot_PSD_Graph(psd_values):
+def Plot_PSD_Graph(psd_values,channels_name):
     for i, (x, y) in enumerate(psd_values):
-        plt.plot(x, y, label=channel_names[i])
+        plt.plot(x, y, label=channels_name[i])
     plt.title('功率谱密度 (PSD)', fontsize=20)
     plt.xlabel('频率 (Hz)', fontsize=15)
     plt.ylabel('功率谱密度 (μV^2/Hz)', fontsize=15)
@@ -56,11 +55,11 @@ def Plot_NMF_Graph(W,H,n_components,channel_names,file_name):
     bar_width = 0.15  # 每个条形图的宽度
     index = np.arange(len(channel_names))  # 横轴刻度位置
 
-    # 可视化协同模式 H，条形图并排排列
+    # 可视化协同模式 W，条形图并排排列
     plt.figure(figsize=(18, 12))
     for i in range(n_components):
         # 偏移每个协同模式的条形图，使其并排排列
-        plt.bar(index + i * bar_width, H[i, :], bar_width, alpha=0.6, label=f'协同模式 {i + 1}')
+        plt.bar(index + i * bar_width, W[i, :], bar_width, alpha=0.6, label=f'协同模式 {i + 1}')
 
     plt.title(f'文件{file_name} 各协同模式的肌肉贡献')
     plt.xlabel('肌肉通道')
@@ -73,10 +72,10 @@ def Plot_NMF_Graph(W,H,n_components,channel_names,file_name):
     plt.savefig(f"./output_img/NMF_Bar_{file_name}.png")
     plt.show()
 
-    # 可视化协同激活时间曲线 W
+    # 可视化协同激活时间曲线 H
     plt.figure(figsize=(12, 8))
     for i in range(n_components):
-        plt.plot(W[0:1000, i], label=f'协同模式 {i + 1}')
+        plt.plot(H[0:2000, i], label=f'协同模式 {i + 1}')
 
     plt.title(f'文件{file_name} 协同模式的激活时间曲线')
     plt.xlabel('时间 (样本点)')
@@ -124,10 +123,9 @@ def Plot_Left_Right_Muscle_Comparison(left_indices,right_indices,left_rms_values
     plt.tight_layout()
     plt.savefig("./output_img/Left_Right_Muscle_MAV.png")
     plt.show()
-def Plot_Muscle_Contribution_Rate(contribution_rate):
-    channels = ['右股直肌', '右股二头肌', '左胫前肌', '右胫前肌', '左腓肠肌', '左股直肌', '左股二头肌', '右腓肠肌']
+def Plot_Muscle_Contribution_Rate(contribution_rate,channels_name):
     plt.figure(figsize=(10, 6))
-    plt.bar(channels, contribution_rate, color='lightgreen', alpha=0.7)
+    plt.bar(channels_name, contribution_rate, color='lightgreen', alpha=0.7)
     plt.title('各通道的贡献率 (Contribution Rate)', fontsize=16)
     plt.xlabel('肌肉通道', fontsize=14)
     plt.ylabel('贡献率', fontsize=14)

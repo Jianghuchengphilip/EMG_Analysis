@@ -38,13 +38,14 @@ def Butter_Bandpass_Preprocessing(emg_data,sampling_rate,lowcut = 20.0,highcut =
     for i in range(n_channels):
         filtered_data[i, :] = filtfilt(b, a, emg_data[i, :])
     return filtered_data
-#去除直流电 (直流偏移)
+#去除直流电 (直流偏移)  待修改  高通0.5hz-20hz
 def remove_dc_offset(data):
     return data - np.mean(data, axis=1, keepdims=True)
 #全波整流
 def full_wave_rectification(data):
     return np.abs(data)
-#计算线性包络 (RMS envelope)
+#修改 添加线性包络
+#计算 RMS envelope
 def rms_envelope(data, window_size=100):
     envelope = np.zeros_like(data)
     for i in range(data.shape[0]):

@@ -22,15 +22,15 @@ def Compute_Psd_Per_Cycle(cycles, sampling_rate):
         cycle_psds.append((freqs, psd))
     return cycle_psds
 #肌肉协同分析
-def NMF_Muscle(filtered_emg_data,n_components,random_state=0, max_iter=500):
+def NMF_Muscle(filtered_emg_data, n_components, random_state=0, max_iter=500):
     # 对数据进行NMF分解
     model = NMF(n_components=n_components, init='random', random_state=random_state, max_iter=max_iter)
-    # 拟合NMF模型
-    W = model.fit_transform(np.abs(filtered_emg_data.T))  # 将数据的每列代表时间序列的特征矩阵进行分解
-    H = model.components_  # 获取特征权重矩阵
-    # W是每个时间点的协同激活值
-    # H是各个协同模式对每个肌肉通道的贡献权重
-    return W,H
+    # 拟合NMF模型，数据的每行代表不同的时间点
+    H = model.fit_transform(np.abs(filtered_emg_data.T))  # 结果是 n_timepoints x n_components
+    W = model.components_  # 获取特征矩阵，n_components x n_features
+    # W是各个协同模式对每个肌肉通道的贡献权重
+    # H是每个时间点的协同激活值
+    return W, H
 #左右肌群对比
 def Left_Right_Muscle_Comparison(filtered_emg_data,left_indices = [5, 6, 2, 4], right_indices = [0, 1, 3, 7]):
     # left_indices = [5, 6, 2, 4]  # 左侧肌肉对应的通道索引
